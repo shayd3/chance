@@ -23,6 +23,13 @@ const manager = new OddsGameManager(config.GAME_TIMEOUT_MS, async (game, reason)
     return;
   }
 
+  if (game.challengeMessageId && 'messages' in channel) {
+    const challengeMessage = await channel.messages.fetch(game.challengeMessageId).catch(() => null);
+    if (challengeMessage) {
+      await challengeMessage.delete().catch(() => null);
+    }
+  }
+
   const reasonText =
     reason === 'pending'
       ? 'Challenge timed out before it was accepted.'
@@ -110,6 +117,15 @@ async function handleOddsCommand(interaction: ChatInputCommandInteraction): Prom
   );
 
   await interaction.reply({
+    content: `Challenge sent to <@${target.id}>. Waiting for them to accept or decline...`,
+    ephemeral: true
+  });
+
+  if (!interaction.channel?.isTextBased() || !('send' in interaction.channel)) {
+    return;
+  }
+
+  const challengeMessage = await interaction.channel.send({
     content:
       `<@${challenger.id}> challenged <@${target.id}> to **What are the odds?**\n` +
       `Prompt: "${prompt}"\n` +
@@ -117,6 +133,8 @@ async function handleOddsCommand(interaction: ChatInputCommandInteraction): Prom
       `Only <@${target.id}> can accept/decline. Timeout: ${Math.floor(config.GAME_TIMEOUT_MS / 1000)}s.`,
     components: [buttons]
   });
+
+  manager.setChallengeMessageId(game.id, challengeMessage.id);
 }
 
 async function handleOddsButton(interaction: ButtonInteraction): Promise<void> {

@@ -24,7 +24,7 @@ Implemented safeguards:
 1. Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 2. Copy environment file:
@@ -41,19 +41,21 @@ cp .env.example .env
 4. Register slash commands:
 
 ```bash
-npm run register:commands
+pnpm register:commands
 ```
 
 5. Run in development:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ## Scripts
 
-- `npm run dev` - Run bot with watch mode
-- `npm run build` - Type-check and compile to `dist/`
-- `npm run start` - Run compiled bot
-- `npm run register:commands` - Register slash commands
-- `npm run lint` - Run ESLint
+- `pnpm dev` - Run bot with watch mode
+- `pnpm build` - Type-check and compile to `dist/`
+- `pnpm start` - Run compiled bot
+- `pnpm register:commands` - Register slash commands
+- `pnpm test` - Run unit tests
+- `pnpm test:watch` - Run tests in watch mode
+- `pnpm lint` - Run ESLint

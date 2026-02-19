@@ -13,6 +13,7 @@ export interface OddsGame {
   targetPick?: number;
   createdAtMs: number;
   expiresAtMs: number;
+  challengeMessageId?: string;
   timeoutHandle: NodeJS.Timeout;
 }
 
@@ -78,6 +79,15 @@ export class OddsGameManager {
 
   getGame(gameId: string): OddsGame | undefined {
     return this.gamesById.get(gameId);
+  }
+
+  setChallengeMessageId(gameId: string, messageId: string): void {
+    const game = this.gamesById.get(gameId);
+    if (!game) {
+      return;
+    }
+
+    game.challengeMessageId = messageId;
   }
 
   acceptGame(gameId: string, userId: string): { ok: true; game: OddsGame } | { ok: false; message: string } {
